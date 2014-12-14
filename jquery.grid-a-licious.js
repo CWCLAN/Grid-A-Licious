@@ -359,7 +359,7 @@
             // unwrap .item in box
             this.box.find($(this.options.selector)).unwrap();
             // delete columns in box
-            this.box.find($(this.options.selector)).remove();
+            this.box.find($('.galcolumn')).remove();
             // build columns
             this._setCols();
             // build grid
