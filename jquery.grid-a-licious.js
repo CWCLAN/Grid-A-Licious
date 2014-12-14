@@ -1,19 +1,3 @@
-Skip to content
- This repository
-Explore
-Gist
-Blog
-Help
-Philipp globeFrEak
- 
-1  Watch 
-  Star 1
- Fork 205mjcampagna/Grid-A-Licious
-forked from suprb/Grid-A-Licious
- branch: master  Grid-A-Licious/jquery.grid-a-licious.js
-mjcampagnamjcampagna on 25 Oct 2012 Update jquery.grid-a-licious.js
-1 contributor
-404 lines (362 sloc)  14.185 kb RawBlameHistory   
 /**
  * jQuery Grid-A-Licious(tm) v3.01
  * forked 2012-10-24 by Matthew Campagna v3.01.4
@@ -418,5 +402,3 @@ mjcampagnamjcampagna on 25 Oct 2012 Update jquery.grid-a-licious.js
     }
 
 })(jQuery);
-Status API Training Shop Blog About
-© 2014 GitHub, Inc. Terms Privacy Security Contact
