@@ -1,5 +1,22 @@
+Skip to content
+ This repository
+Explore
+Gist
+Blog
+Help
+Philipp globeFrEak
+ 
+1  Watch 
+  Star 1
+ Fork 205mjcampagna/Grid-A-Licious
+forked from suprb/Grid-A-Licious
+ branch: master  Grid-A-Licious/jquery.grid-a-licious.js
+mjcampagnamjcampagna on 25 Oct 2012 Update jquery.grid-a-licious.js
+1 contributor
+404 lines (362 sloc)  14.185 kb RawBlameHistory   
 /**
  * jQuery Grid-A-Licious(tm) v3.01
+ * forked 2012-10-24 by Matthew Campagna v3.01.4
  *
  * Terms of Use - jQuery Grid-A-Licious(tm)
  * under the MIT (http://www.opensource.org/licenses/mit-license.php) License.
@@ -46,6 +63,8 @@
 
     $.Gal.settings = {
         selector: '.item',
+        getCSSWidth: false,
+        clearfix: false,
         width: 225,
         gutter: 20,
         animate: false,
@@ -77,7 +96,6 @@
             this.resetCount = true;
             this.ifCallback = true;
             this.box = this.element;
-            this.boxWidth = this.box.width();
             this.options = $.extend(true, {}, $.Gal.settings, options);
             this.gridArr = $.makeArray(this.box.find(this.options.selector));
             this.isResizing = false;
@@ -103,18 +121,35 @@
 
         _setCols: function () {
             // calculate columns
-            this.cols = Math.floor(this.box.width() / this.options.width);
-            //If Cols lower than 1, the grid disappears
-            if (this.cols < 1) { this.cols = 1; }
-            diff = (this.box.width() - (this.cols * this.options.width) - this.options.gutter) / this.cols;
-            w = (this.options.width + diff) / this.box.width() * 100;
+            
+            if (this.options.getCSSWidth) {
+				itemWidth = $(this.options.selector).outerWidth(true);
+			} else {
+				itemWidth = this.options.width;
+			}
+
+            this.cols = Math.floor(this.box.width() / itemWidth);
+            diff = (this.box.width() - (this.cols * itemWidth) - this.options.gutter) / this.cols;
+            w = (itemWidth + diff) / this.box.width() * 100;
             this.w = w;
             // add columns to box
+
+            if (this.options.getCSSWidth) {
+				gutter = diff;
+				gutterRight = 0;
+				gutterLeft = Math.floor(diff/2);
+			} else {
+				gutter = this.options.gutter;
+				gutterRight = this.options.gutter/2;
+				gutterLeft = this.options.gutter/2;
+			}
+
             for (var i = 0; i < this.cols; i++) {
                 var div = $('<div></div>').addClass('galcolumn').attr('id', 'item' + i + this.name).css({
                     'width': w + '%',
-                    'paddingLeft': this.options.gutter,
-                    'paddingBottom': this.options.gutter,
+                    'paddingRight': gutterRight,
+                    'paddingLeft': gutterLeft,
+                    'paddingBottom': gutter,
                     'float': 'left',
                     '-webkit-box-sizing': 'border-box',
                     '-moz-box-sizing': 'border-box',
@@ -124,16 +159,28 @@
                 this.box.append(div);
             }
             
-            
-            this.box.find($('#clear' + this.name)).remove();
-            // add clear float
-            var clear = $('<div></div>').css({
-                'clear': 'both',
-                'height': '0',
-                'width': '0',
-                'display': 'block'
-            }).attr('id', 'clear' + this.name);
-            this.box.append(clear);
+	        if (this.options.getCSSWidth) {
+			// nudge first column to center columns within container
+            $('#item0' + this.name).css('margin-left', Math.floor((this.box.width() - $('.galcolumn').outerWidth() * this.cols))/2 + 'px');
+            } else {
+            $('#item0' + this.name).css('margin-left', Math.floor((this.box.width() - $('.galcolumn').outerWidth() * this.cols))/2 + 'px');
+			$(this.options.selector).css({
+				'padding': 0,
+				'width': 'auto'
+			});
+            }
+
+            if (!this.options.clearfix) {
+	            this.box.find($('#clear' + this.name)).remove();
+	            // add clear float
+	            var clear = $('<div></div>').css({
+	                'clear': 'both',
+	                'height': '0',
+	                'width': '0',
+	                'display': 'block'
+	            }).attr('id', 'clear' + this.name);
+	            this.box.append(clear);
+            }
         },
 
         _renderGrid: function (method, arr, count, prepArray) {
@@ -143,7 +190,6 @@
             var itemCount = 0;
             var prependCount = this.prependCount;
             var appendCount = this.appendCount;
-            var gutter = this.options.gutter;
             var cols = this.cols;
             var name = this.name;
             var i = 0;
@@ -326,12 +372,10 @@
         },
 
         resize: function () {
-            if (this.box.width() === this.boxWidth) {
-                return;
-            }
-
+            // unwrap .item in box
+            this.box.find($(this.options.selector)).unwrap();
             // delete columns in box
-            this.box.find(this.options.selector).unwrap();
+            this.box.find($(this.options.selector)).remove();
             // build columns
             this._setCols();
             // build grid
@@ -340,7 +384,6 @@
             this._renderGrid('append');
             this.ifCallback = true;
             this.isResizing = false;
-            this.boxWidth = this.box.width();
         },
 
         append: function (items) {
@@ -375,3 +418,5 @@
     }
 
 })(jQuery);
+Status API Training Shop Blog About
+© 2014 GitHub, Inc. Terms Privacy Security Contact
